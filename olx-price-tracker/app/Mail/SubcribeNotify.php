@@ -20,7 +20,7 @@ class SubcribeNotify extends Mailable
     public function build()
     {
         return $this->subject($this->type->title())
-            ->view('emails.price_alert')
+            ->view('emails.notify')
             ->with([
                 'subscription' => $this->subscription,
                 'type' => $this->type

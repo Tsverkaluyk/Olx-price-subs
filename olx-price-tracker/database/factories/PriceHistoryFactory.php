@@ -16,6 +16,7 @@ class PriceHistoryFactory extends Factory
             'price' => $this->faker->randomFloat(2, 10, 1000),
             'currency' => $this->faker->currencyCode,
             'subscription_id' => Subscription::factory(),
+            'date' => $this->faker->date(),
         ];
     }
 }

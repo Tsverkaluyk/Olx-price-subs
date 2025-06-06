@@ -7,6 +7,7 @@ use App\Http\Requests\SubscribeRequest;
 use App\Mail\SubcribeNotify;
 use App\Models\Subscription;
 use App\Services\OlxParser;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
@@ -39,7 +40,8 @@ class SubscriptionController
                 'current_price' => $currentPrice['price'],
                 'current_currency' => $currentPrice['currency'],
                 'is_active' => true,
-                'token' => Str::random(32)
+                'token' => Str::random(32),
+                'date' => Carbon::now()
             ])->save();
 
             Mail::to($validated['email'])->send(

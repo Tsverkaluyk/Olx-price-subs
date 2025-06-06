@@ -4,6 +4,7 @@ namespace Tests\Unit\Models;
 
 use App\Models\PriceHistory;
 use App\Models\Subscription;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
@@ -15,19 +16,26 @@ class SubscriptionTest extends TestCase
     #[Test]
     public function it_can_create_a_subscription()
     {
+        $now = Carbon::now()->startOfSecond();
+        /** @var Subscription $subscription */
         $subscription = Subscription::factory()->create([
             'url' => 'https://example.com',
             'email' => 'test@example.com',
             'current_price' => 100.50,
             'current_currency' => 'USD',
             'is_active' => true,
+            'date' => $now,
         ]);
 
         $this->assertDatabaseHas('subscriptions', [
             'id' => $subscription->id,
             'email' => 'test@example.com',
             'current_price' => 100.50,
+            'date' => $now->toDateTimeString(),
         ]);
+
+        $this->assertInstanceOf(Carbon::class, $subscription->date);
+        $this->assertTrue($subscription->date->equalTo($now));
     }
 
     #[Test]

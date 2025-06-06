@@ -18,6 +18,7 @@ class SubscriptionFactory extends Factory
             'current_currency' => 'USD',
             'is_active' => false,
             'token' => $this->faker->uuid,
+            'date' => $this->faker->date(),
         ];
     }
 }

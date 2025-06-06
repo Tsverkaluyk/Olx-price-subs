@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use \Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -19,6 +20,7 @@ return new class extends Migration
             $table->string('current_currency', 10);
             $table->boolean('is_active')->default(true);
             $table->string('token')->unique();
+            $table->dateTime('date')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamps();
 
             $table->index('url');
@@ -29,7 +31,7 @@ return new class extends Migration
             $table->decimal('price', 10, 2);
             $table->string('currency', 10);
             $table->foreignId('subscription_id')->constrained()->cascadeOnDelete();
-            $table->timestamps();
+            $table->dateTime('date');
         });
     }
 
