@@ -6,12 +6,13 @@ use App\Models\PriceHistory;
 use App\Models\Subscription;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class PriceHistoryTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function it_can_create_price_history()
     {
         $subscription = Subscription::factory()->create();
@@ -28,7 +29,7 @@ class PriceHistoryTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_belongs_to_subscription()
     {
         $subscription = Subscription::factory()->create();
@@ -38,7 +39,7 @@ class PriceHistoryTest extends TestCase
         $this->assertEquals($subscription->id, $history->subscription->id);
     }
 
-    /** @test */
+    #[Test]
     public function it_casts_price_to_float()
     {
         $history = PriceHistory::factory()->create(['price' => '200.50']);

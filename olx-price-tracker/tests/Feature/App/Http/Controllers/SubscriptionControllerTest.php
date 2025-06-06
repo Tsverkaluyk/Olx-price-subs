@@ -17,7 +17,7 @@ class SubscriptionControllerTest extends TestCase
         Mail::fake();
 
         $response = $this->postJson('/api/subscribe', [
-            'url' => 'https://www.olx.ua/d/uk/obyavlenie/frontalniy-navantazhuvach-lonking-cdm936n-IDT23ql.html?reason=hp%7Cpromoted',
+            'url' => 'https://www.olx.ua/d/uk/obyavlenie/utsi-komplekt-dlya-tokarnogo-frezernogo-IDXhpGb.html',
             'email' => 'test@example.com',
         ]);
 
@@ -29,7 +29,7 @@ class SubscriptionControllerTest extends TestCase
 
         $this->assertDatabaseHas('subscriptions', [
             'email' => 'test@example.com',
-            'url' => 'https://www.olx.ua/d/uk/obyavlenie/frontalniy-navantazhuvach-lonking-cdm936n-IDT23ql.html?reason=hp%7Cpromoted',
+            'url' => 'https://www.olx.ua/d/uk/obyavlenie/utsi-komplekt-dlya-tokarnogo-frezernogo-IDXhpGb.html',
             'is_active' => true
         ]);
 
@@ -50,12 +50,12 @@ class SubscriptionControllerTest extends TestCase
     public function test_invalid_mail_returns_error()
     {
         $response = $this->postJson('/api/subscribe', [
-            'url' => 'https://www.olx.ua/d/uk/obyavlenie/frontalniy-navantazhuvach-lonking-cdm936n-IDT23ql.html?reason=hp%7Cpromoted',
+            'url' => 'https://www.olx.ua/d/uk/obyavlenie/utsi-komplekt-dlya-tokarnogo-frezernogo-IDXhpGb.html',
             'email' => 'test',
         ]);
 
         $response->assertStatus(422);
-        $response->assertJsonValidationErrors(['mail']);
+        $response->assertJsonValidationErrors(['email']);
     }
 
     public function test_invalid_mail_url_returns_error()
@@ -65,8 +65,8 @@ class SubscriptionControllerTest extends TestCase
             'email' => 'test',
         ]);
 
-        $response->assertStatus(422); // validation error
-        $response->assertJsonValidationErrors(['mail', 'url']);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['email', 'url']);
     }
 
     public function test_can_unsubscribe()
@@ -76,7 +76,7 @@ class SubscriptionControllerTest extends TestCase
             'token' => 'test-token',
         ]);
 
-        $response = $this->postJson('/api/unsubscribe/test-token');
+        $response = $this->getJson('/api/unsubscribe/test-token');
 
         $response->assertStatus(200);
         $response->assertJson([
@@ -88,4 +88,22 @@ class SubscriptionControllerTest extends TestCase
             'is_active' => false
         ]);
     }
+
+    public function test_invalid_unsubscribe()
+    {
+        $subscription = Subscription::factory()->create([
+            'is_active' => true,
+            'token' => 'test-token',
+        ]);
+
+        $response = $this->getJson('/api/unsubscribe/invalid-token');
+
+        $response->assertStatus(404);
+
+        $this->assertDatabaseHas('subscriptions', [
+            'id' => $subscription->id,
+            'is_active' => true,
+        ]);
+    }
+
 }

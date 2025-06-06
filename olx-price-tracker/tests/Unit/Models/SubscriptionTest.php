@@ -6,12 +6,13 @@ use App\Models\PriceHistory;
 use App\Models\Subscription;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class SubscriptionTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function it_can_create_a_subscription()
     {
         $subscription = Subscription::factory()->create([
@@ -29,7 +30,7 @@ class SubscriptionTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_has_price_histories_relation()
     {
         $subscription = Subscription::factory()
@@ -40,7 +41,7 @@ class SubscriptionTest extends TestCase
         $this->assertCount(3, $subscription->priceHistories);
     }
 
-    /** @test */
+    #[Test]
     public function it_casts_is_active_to_boolean()
     {
         $subscription = Subscription::factory()->create(['is_active' => 1]);
@@ -50,7 +51,7 @@ class SubscriptionTest extends TestCase
         $this->assertFalse($subscription->fresh()->is_active);
     }
 
-    /** @test */
+    #[Test]
     public function it_casts_current_price_to_float()
     {
         $subscription = Subscription::factory()->create(['current_price' => '150.75']);

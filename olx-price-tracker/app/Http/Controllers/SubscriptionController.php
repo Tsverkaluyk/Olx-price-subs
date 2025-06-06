@@ -37,7 +37,7 @@ class SubscriptionController
 
             $subscription->fill([
                 'current_price' => $currentPrice['price'],
-                'currency' => $currentPrice['currency'],
+                'current_currency' => $currentPrice['currency'],
                 'is_active' => true,
                 'token' => Str::random(32)
             ])->save();

@@ -40,7 +40,7 @@ class OlxParser
                 $priceElement = $crawler->filter(self::PRICE_SELECTOR);
                 $priceText = trim($priceElement->text());
 
-                preg_match('/([\d\s]+)\s*([^\d]+)/', $priceText, $matches);
+                preg_match('/([\d\s,.]+)\s*([^\d]+)/', $priceText, $matches);
 
                 if (count($matches) < 3) {
                     return null;
