@@ -41,7 +41,6 @@ class OlxParserTest extends TestCase
 </div>
 HTML;
 
-        // Мок відповіді HTTP з кодом 200 і потрібним HTML
         $response = new Response(200, [], $html);
 
         $this->mockClient->method('get')->willReturn($response);
@@ -61,7 +60,6 @@ HTML;
 </div>
 HTML;
 
-        // Мок відповіді HTTP з кодом 200 і потрібним HTML
         $response = new Response(200, [], $html);
 
         $this->mockClient->method('get')->willReturn($response);
