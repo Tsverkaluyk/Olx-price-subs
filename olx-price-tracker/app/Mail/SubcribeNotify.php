@@ -15,7 +15,8 @@ class SubcribeNotify extends Mailable
     public function __construct(
         public Subscription $subscription,
         public NotificationType $type
-    ) {}
+    ) {
+    }
 
     public function build()
     {

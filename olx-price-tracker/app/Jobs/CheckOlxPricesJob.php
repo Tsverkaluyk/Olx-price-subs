@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Jobs;
+
 use App\Enums\NotificationType;
 use App\Mail\SubcribeNotify;
 use App\Models\Subscription;

@@ -15,8 +15,8 @@ use Illuminate\Support\Facades\Mail;
 class SubscriptionController
 {
     /**
-     * @param SubscribeRequest $request
-     * @param OlxParser $parser
+     * @param  SubscribeRequest  $request
+     * @param  OlxParser  $parser
      * @return JsonResponse
      */
     public function subscribe(SubscribeRequest $request, OlxParser $parser): JsonResponse

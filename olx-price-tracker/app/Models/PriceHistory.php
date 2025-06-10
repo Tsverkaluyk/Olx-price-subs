@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class PriceHistory extends Model
 {
     use HasFactory;
+
     public $timestamps = false;
     protected $fillable = ['price', 'subscription_id', 'currency', 'date'];
 

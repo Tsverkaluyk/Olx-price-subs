@@ -9,9 +9,8 @@ use Exception;
 
 class OlxParser
 {
-    protected Client $client;
-
     public const PRICE_SELECTOR = '[data-testid="ad-price-container"] h3';
+    protected Client $client;
 
     public function __construct()
     {
@@ -19,12 +18,12 @@ class OlxParser
     }
 
     /**
-     * @param string $url
+     * @param  string  $url
      * @return array|null
      */
     public function getPrice(string $url): ?array
     {
-        $cacheKey = 'olx_price_' . md5($url);
+        $cacheKey = 'olx_price_'.md5($url);
         return Cache::remember($cacheKey, now()->addMinutes(5), function () use ($url) {
             try {
                 $response = $this->client->get($url);
@@ -46,7 +45,7 @@ class OlxParser
                     return null;
                 }
 
-                $price = (float)preg_replace('/\s+/', '', $matches[1]);
+                $price = (float) preg_replace('/\s+/', '', $matches[1]);
                 $currency = trim($matches[2]);
 
                 return [

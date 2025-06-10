@@ -9,7 +9,7 @@ enum NotificationType: string
 
     public function title(): string
     {
-        return match($this) {
+        return match ($this) {
             self::SUBSCRIPTION => 'Підтвердження підписки',
             self::PRICE_CHANGE => 'Зміна ціни',
         };
