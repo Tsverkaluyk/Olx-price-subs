@@ -241,6 +241,11 @@
       <path value="$PROJECT_DIR$/olx-price-tracker/vendor/ramsey/collection" />
       <path value="$PROJECT_DIR$/olx-price-tracker/vendor/ramsey/uuid" />
       <path value="$PROJECT_DIR$/olx-price-tracker/vendor/staabm/side-effects-detector" />
+      <path value="$PROJECT_DIR$/olx-price-tracker/vendor/doctrine/annotations" />
+      <path value="$PROJECT_DIR$/olx-price-tracker/vendor/darkaonline/l5-swagger" />
+      <path value="$PROJECT_DIR$/olx-price-tracker/vendor/swagger-api/swagger-ui" />
+      <path value="$PROJECT_DIR$/olx-price-tracker/vendor/zircote/swagger-php" />
+      <path value="$PROJECT_DIR$/olx-price-tracker/vendor/psr/cache" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2" />

@@ -238,6 +238,11 @@
       <excludeFolder url="file://$MODULE_DIR$/olx-price-tracker/vendor/vlucas/phpdotenv" />
       <excludeFolder url="file://$MODULE_DIR$/olx-price-tracker/vendor/voku/portable-ascii" />
       <excludeFolder url="file://$MODULE_DIR$/olx-price-tracker/vendor/webmozart/assert" />
+      <excludeFolder url="file://$MODULE_DIR$/olx-price-tracker/vendor/darkaonline/l5-swagger" />
+      <excludeFolder url="file://$MODULE_DIR$/olx-price-tracker/vendor/doctrine/annotations" />
+      <excludeFolder url="file://$MODULE_DIR$/olx-price-tracker/vendor/psr/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/olx-price-tracker/vendor/swagger-api/swagger-ui" />
+      <excludeFolder url="file://$MODULE_DIR$/olx-price-tracker/vendor/zircote/swagger-php" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
