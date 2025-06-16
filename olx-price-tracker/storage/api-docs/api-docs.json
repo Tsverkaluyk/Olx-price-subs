@@ -1,0 +1,143 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "OLX API",
+        "description": "API для підписки на зміни оголошень",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://my-default-host.com",
+            "description": "Основний сервер"
+        }
+    ],
+    "paths": {
+        "/api/subscribe": {
+            "post": {
+                "tags": [
+                    "Subscription"
+                ],
+                "summary": "Підписка на оголошення OLX",
+                "operationId": "2730a10456272c98d9f63b38dc37638c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SubscribeRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Підписка створена або оновлена",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Підписка успішно створена або оновлена"
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "f8a3b9e540c841aaac2c6a5f9d99a1df"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Помилка при отриманні ціни",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Не вдалося отримати ціну з цього URL"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/unsubscribe/{token}": {
+            "get": {
+                "tags": [
+                    "Subscription"
+                ],
+                "summary": "Відписка від сповіщень",
+                "operationId": "fb4aea38243975aed07ceccb3f010a8d",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "path",
+                        "description": "Унікальний токен підписки",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Відписка успішна",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Ви успішно відписалися"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Підписка не знайдена"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "SubscribeRequest": {
+                "required": [
+                    "url",
+                    "email"
+                ],
+                "properties": {
+                    "url": {
+                        "type": "string",
+                        "format": "uri",
+                        "example": "https://www.olx.ua/d/uk/obyavlenie/iphone-12/"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "test@example.com"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Subscription",
+            "description": "Subscription"
+        }
+    ]
+}

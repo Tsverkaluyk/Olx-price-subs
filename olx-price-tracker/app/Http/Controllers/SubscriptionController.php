@@ -15,9 +15,30 @@ use Illuminate\Support\Facades\Mail;
 class SubscriptionController
 {
     /**
-     * @param  SubscribeRequest  $request
-     * @param  OlxParser  $parser
-     * @return JsonResponse
+     * @OA\Post(
+     *     path="/api/subscribe",
+     *     summary="Підписка на оголошення OLX",
+     *     tags={"Subscription"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(ref="#/components/schemas/SubscribeRequest")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Підписка створена або оновлена",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Підписка успішно створена або оновлена"),
+     *             @OA\Property(property="token", type="string", example="f8a3b9e540c841aaac2c6a5f9d99a1df")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Помилка при отриманні ціни",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Не вдалося отримати ціну з цього URL")
+     *         )
+     *     )
+     * )
      */
     public function subscribe(SubscribeRequest $request, OlxParser $parser): JsonResponse
     {
@@ -56,9 +77,31 @@ class SubscriptionController
     }
 
     /**
-     * @param $token
-     * @return JsonResponse
+     * @OA\Get(
+     *     path="/api/unsubscribe/{token}",
+     *     summary="Відписка від сповіщень",
+     *     tags={"Subscription"},
+     *     @OA\Parameter(
+     *         name="token",
+     *         in="path",
+     *         required=true,
+     *         description="Унікальний токен підписки",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Відписка успішна",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Ви успішно відписалися")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Підписка не знайдена"
+     *     )
+     * )
      */
+
     public function unsubscribe($token): JsonResponse
     {
         $subscription = Subscription::where('token', $token)->firstOrFail();
