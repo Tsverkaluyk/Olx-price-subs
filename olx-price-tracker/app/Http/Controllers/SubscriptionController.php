@@ -2,15 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\NotificationType;
 use App\Http\Requests\SubscribeRequest;
-use App\Mail\SubcribeNotify;
-use App\Models\Subscription;
+use App\Http\Resources\SubscriptionResource;
 use App\Services\OlxParser;
-use Carbon\Carbon;
+use App\Services\SubscribeService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Mail;
 
 class SubscriptionController
 {
@@ -25,88 +21,75 @@ class SubscriptionController
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Підписка створена або оновлена",
+     *         description="Підписка успішно створена або оновлена",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Підписка успішно створена або оновлена"),
-     *             @OA\Property(property="token", type="string", example="f8a3b9e540c841aaac2c6a5f9d99a1df")
+     *             @OA\Property(
+     *                 property="data",
+     *                 ref="#/components/schemas/Subscription"
+     *             )
      *         )
      *     ),
      *     @OA\Response(
      *         response=400,
      *         description="Помилка при отриманні ціни",
      *         @OA\JsonContent(
-     *             @OA\Property(property="error", type="string", example="Не вдалося отримати ціну з цього URL")
+     *             @OA\Property(
+     *                 property="error",
+     *                 type="string",
+     *                 example="Не вдалося отримати ціну з цього URL"
+     *             )
      *         )
      *     )
      * )
      */
-    public function subscribe(SubscribeRequest $request, OlxParser $parser): JsonResponse
-    {
+    public function subscribe(
+        SubscribeRequest $request,
+        OlxParser $parser,
+        SubscribeService $service
+    ): SubscriptionResource {
         $validated = $request->validated();
-        $subscription = Subscription::firstOrNew([
-            'url' => $validated['url'],
-            'email' => $validated['email']
-        ]);
+        $subscription = $service->subscribe($validated, $parser);
 
-        if (!$subscription->exists || !$subscription->is_active) {
-            $currentPrice = $parser->getPrice($validated['url']);
-
-            if (!$currentPrice) {
-                return response()->json([
-                    'error' => 'Не вдалося отримати ціну з цього URL'
-                ], 400);
-            }
-
-            $subscription->fill([
-                'current_price' => $currentPrice['price'],
-                'current_currency' => $currentPrice['currency'],
-                'is_active' => true,
-                'token' => Str::random(32),
-                'date' => Carbon::now()
-            ])->save();
-
-            Mail::to($validated['email'])->send(
-                new SubcribeNotify($subscription, NotificationType::SUBSCRIPTION)
-            );
-        }
-
-        return response()->json([
-            'message' => 'Підписка успішно створена або оновлена',
-            'token' => $subscription->token
-        ]);
+        return SubscriptionResource::make($subscription);
     }
 
+
     /**
-     * @OA\Get(
+     * @OA\Delete(
      *     path="/api/unsubscribe/{token}",
-     *     summary="Відписка від сповіщень",
+     *     summary="Відписатися від підписки за токеном",
      *     tags={"Subscription"},
      *     @OA\Parameter(
      *         name="token",
      *         in="path",
-     *         required=true,
      *         description="Унікальний токен підписки",
-     *         @OA\Schema(type="string")
+     *         required=true,
+     *         @OA\Schema(type="string", format="uuid")
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Відписка успішна",
+     *         description="Успішна відписка",
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="Ви успішно відписалися")
      *         )
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Підписка не знайдена"
+     *         description="Підписка не знайдена",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Підписка не знайдена")
+     *         )
      *     )
      * )
      */
-
-    public function unsubscribe($token): JsonResponse
+    public function unsubscribe(string $token, SubscribeService $service): JsonResponse
     {
-        $subscription = Subscription::where('token', $token)->firstOrFail();
-        $subscription->update(['is_active' => false]);
+        $result = $service->unsubscribe($token);
 
-        return response()->json(['message' => 'Ви успішно відписалися']);
+        if (!$result) {
+            return response()->json(['error' => 'Підписка не знайдена'], 404);
+        }
+
+        return response()->json(['message' => 'Ви успішно відписалися'], 200);
     }
 }

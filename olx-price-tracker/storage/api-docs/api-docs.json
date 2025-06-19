@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "info": {
         "title": "OLX API",
-        "description": "API для підписки на зміни оголошень",
+        "description": "API для підписки на зміни ціни в оголошенях",
         "version": "1.0.0"
     },
     "servers": [
@@ -31,18 +31,13 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Підписка створена або оновлена",
+                        "description": "Підписка успішно створена або оновлена",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Підписка успішно створена або оновлена"
-                                        },
-                                        "token": {
-                                            "type": "string",
-                                            "example": "f8a3b9e540c841aaac2c6a5f9d99a1df"
+                                        "data": {
+                                            "$ref": "#/components/schemas/Subscription"
                                         }
                                     },
                                     "type": "object"
@@ -70,12 +65,12 @@
             }
         },
         "/api/unsubscribe/{token}": {
-            "get": {
+            "delete": {
                 "tags": [
                     "Subscription"
                 ],
-                "summary": "Відписка від сповіщень",
-                "operationId": "fb4aea38243975aed07ceccb3f010a8d",
+                "summary": "Відписатися від підписки за токеном",
+                "operationId": "1934e112274025a19735461dfaf5dc83",
                 "parameters": [
                     {
                         "name": "token",
@@ -83,13 +78,14 @@
                         "description": "Унікальний токен підписки",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "uuid"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Відписка успішна",
+                        "description": "Успішна відписка",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -105,7 +101,20 @@
                         }
                     },
                     "404": {
-                        "description": "Підписка не знайдена"
+                        "description": "Підписка не знайдена",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Підписка не знайдена"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -128,6 +137,52 @@
                         "type": "string",
                         "format": "email",
                         "example": "test@example.com"
+                    }
+                },
+                "type": "object"
+            },
+            "Subscription": {
+                "required": [
+                    "url",
+                    "email",
+                    "current_price",
+                    "currency",
+                    "is_active",
+                    "token",
+                    "date"
+                ],
+                "properties": {
+                    "url": {
+                        "type": "string",
+                        "format": "url",
+                        "example": "https://www.olx.ua/d/uk/obyavlenie/smartfon"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "user@example.com"
+                    },
+                    "current_price": {
+                        "type": "number",
+                        "example": 2500
+                    },
+                    "currency": {
+                        "type": "string",
+                        "example": "UAH"
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "token": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "23f9d7dc-0c7f-4a20-97aa-7f23c244b159"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-06-19 13:45:00"
                     }
                 },
                 "type": "object"

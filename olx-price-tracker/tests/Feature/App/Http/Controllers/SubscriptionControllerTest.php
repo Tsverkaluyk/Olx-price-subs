@@ -21,10 +21,17 @@ class SubscriptionControllerTest extends TestCase
             'email' => 'test@example.com',
         ]);
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJsonStructure([
-            'message',
-            'token'
+            'data' => [
+                'url',
+                'email',
+                'current_price',
+                'currency',
+                'is_active',
+                'token',
+                'date',
+            ]
         ]);
 
         $this->assertDatabaseHas('subscriptions', [
@@ -76,7 +83,7 @@ class SubscriptionControllerTest extends TestCase
             'token' => 'test-token',
         ]);
 
-        $response = $this->getJson('/api/unsubscribe/test-token');
+        $response = $this->deleteJson('/api/unsubscribe/test-token');
 
         $response->assertStatus(200);
         $response->assertJson([
@@ -96,7 +103,7 @@ class SubscriptionControllerTest extends TestCase
             'token' => 'test-token',
         ]);
 
-        $response = $this->getJson('/api/unsubscribe/invalid-token');
+        $response = $this->deleteJson('/api/unsubscribe/invalid-token');
 
         $response->assertStatus(404);
 

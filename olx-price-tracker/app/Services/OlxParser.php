@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Cache;
 use Symfony\Component\DomCrawler\Crawler;
 use Exception;
 
-class OlxParser
+class OlxParser extends SiteParser
 {
     public const PRICE_SELECTOR = '[data-testid="ad-price-container"] h3';
     protected Client $client;
